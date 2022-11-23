@@ -6,7 +6,7 @@ const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
 const uploadPath = path.join('public', Book.coverImageBasePath)
-const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg']
+const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif', 'image/pjpg']
 const upload = multer({
   dest: uploadPath,
   fileFilter: (req, file, callback) => {
@@ -33,7 +33,7 @@ router.get('/', async(req,res) => {
 
 
   try{ 
-    const books = await query.exec
+    const books = await query.exec()
     res.render('books/index', {
       books: books,
       searchOptions: req.query
@@ -58,7 +58,7 @@ router.post('/', upload.single('cover'), async(req,res) => {
     author: req.body.author,
     publishDate: new Date(req.body.publishDate),
     pageCount: req.body.pageCount,
-    coverImageBasePath: fileName,
+    coverImageName: fileName,
     description: req.body.description
   })
 
