@@ -4,8 +4,11 @@ const Author = require('../models/author')
 
 //all authors route
 router.get('/', async(req,res) => {
- let searchOptions = {}
+ let searchOptions = {} //will store search objects
+ // get req sends information thru query string ex: //link//?name=Iti
+
  if(req.query.name!= null && req.query.name!== ''){
+    //Regular exp allows one to search via part of the word and it returns its full word
      searchOptions.name = new RegExp( req.query.name, 'i')//i flag=> case insensitive
  }
  try{
@@ -40,7 +43,7 @@ router.post('/', async(req,res) => {
     } catch {
         res.render('authors/new' , {
              author: author,
-              errorMessage: 'Error creating Author'
+             errorMessage: 'Error creating Author'
         })
     }
 })
