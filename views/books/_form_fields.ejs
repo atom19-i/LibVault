@@ -6,9 +6,9 @@
    <label>Author</label>
    <select name="author">
      <% authors.forEach(author => { %>
-        <!-- for selecting one and deselecting others -->
-        <!-- book.author = book.author.id as author is objectId ref (in schema)-->
-        <% if(author.id == book.author) { %>
+      <% /* for selecting one and deselecting others */ %> 
+      <% /* book.author = book.author.id as author is objectId ref (in schema) */ %>
+        <% if(author.id === book.author) { %>
            <option selected label="<%= author.name %>" value="<%= author.id %>">
         <% } else { %>
            <option label="<%= author.name %>" value="<%= author.id %>">

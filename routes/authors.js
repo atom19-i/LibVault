@@ -19,7 +19,7 @@ router.get('/', async(req,res) => {
         searchOptions: req.query
     })
   } catch {
-
+    res.redirect('/')
  }
 })
 
@@ -50,6 +50,7 @@ router.post('/', async(req,res) => {
     }
 })
 
+//show author route
 router.get('/:id', async(req,res) => {
    try {
     const author = await Author.findById(req.params.id)
@@ -63,6 +64,7 @@ router.get('/:id', async(req,res) => {
    }
 })
 
+//edit author route
 router.get('/:id/edit', async(req,res) => {
     try {
         const author = await Author.findById(req.params.id)

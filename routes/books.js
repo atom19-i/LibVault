@@ -21,8 +21,7 @@ router.get('/', async(req,res) => {
   query = query.gte('publishDate',req.query.publishedAfter)
  }
 
-
-  try{ 
+ try{ 
     const books = await query.exec()
     res.render('books/index', {
       books: books,
@@ -40,7 +39,7 @@ router.get('/new', async (req,res) => {
 })
 
 //create new books
-router.post('/',  async(req,res) => {
+router.post('/',  async ( req, res) => {
   // req.body.publishDate will return string and Date() will convert string to date
   const book = new Book({
     title: req.body.title,
@@ -53,16 +52,93 @@ router.post('/',  async(req,res) => {
 
   try{
    const newBook = await book.save()
-   //(`books/${newBook.id}`)
-   res.redirect(`books`)
+   res.redirect(`books/${newBook.id}`)
   } catch {
     renderNewPage(res, book, true)
   }
 })
 
+//show book route
+router.get('/:id', async (req,res) => {
+  try{
+    //find by Id would have given author id , to display other info
+    // of author, use populate
+    //with populate, author here now is not an id,its an obj
+    const book = await Book.findById(req.params.id)
+                            .populate('author')
+                            .exec()
+    res.render('books/show', { book: book })                      
+  } catch {
+    res.redirect('/')
+  }
+})
+
+//Edit book route
+router.get('/:id/edit', async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id)
+    renderEditPage(res,book)
+  } catch{
+    res.redirect('/')
+  }
+})
+
+//Update book route
+router.put('/:id',  async(req,res) => {
+  // new Date() will convert timestmp to date string
+  let book
+
+  try{
+   book = await Book.findById(req.params.id)
+   book.title = req.body.title
+   //name is author in form_field in view/books
+   book.author = req.body.author
+   book.publishDate = new Date(req.body.publishDate)
+   book.pageCount = req.body.pageCount
+   book.description = req.body.description
+   if(req.body.cover != null && req.body.cover !== ''){
+    saveCover(book, req.body.cover)
+   }
+   await book.save()
+   res.redirect(`/books/${book.id}`)
+  } catch {
+    if(book != null){
+      renderEditPage(res, book, true)
+    } else {
+      res.redirect('/')
+    }
+  }
+})
+
+//Delete book route
+router.delete('/:id', async( req, res) => {
+ let book
+ try {
+  book = await Book.findById(req.params.id)
+  await book.remove()
+  res.redirect('/books')
+ } catch {
+  if(book!= null){
+    res.render('books/show', {
+      book: book,
+      errorMessage : 'Could not remove book'
+    }) 
+  } else {
+    res.redirect('/')
+  }
+ }
+})
 
 //passing book as sometimes it will be existing book or new one
 async function renderNewPage(res, book, hasError = false){
+  renderFormPage(res, book, 'new', hasError)
+}
+
+async function renderEditPage(res, book, hasError = false){
+  renderFormPage(res, book, 'edit', hasError)
+}
+
+async function renderFormPage(res, book, form, hasError = false){
   try{
     const authors = await Author.find({})
     //to create errorMessage dynamically, use params
@@ -70,9 +146,14 @@ async function renderNewPage(res, book, hasError = false){
       authors: authors,
       book: book
      }
-
-     if(hasError) params.errorMessage = 'Error Creating Book'
-    res.render('books/new' , params)
+     if(hasError) {
+      if(form === 'edit'){
+        params.errorMessage = 'Error Updating Book'
+      } else {
+        params.errorMessage = 'Error Creating Book'
+      }
+     }
+    res.render(`books/${form}` , params)
    } catch {
      res.redirect('/books')
    }
