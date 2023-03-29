@@ -1,4 +1,4 @@
 # libVault
 
 
-![libvault](https://imgur.com/TheBOK4)
+![libvault](https://gifyu.com/image/SIFoK)
