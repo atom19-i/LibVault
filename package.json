@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "netlify-lambda build server.js",
+    "ejs":"node node_modules/ejs/index.js views/ --out ./",
     "devStart": "nodemon server.js"
   },
   "repository": {
