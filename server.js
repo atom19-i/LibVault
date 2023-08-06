@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== 'production')
   require('dotenv').config()
 }
 
-
+const path = require('path');
 const express = require('express')
 const app = express()
 const expressLayouts = require('express-ejs-layouts')
@@ -15,7 +15,7 @@ const authorRouter = require('./routes/authors')
 const bookRouter = require('./routes/books')
 
 app.set('view engine','ejs') //setting view engine
-app.set('views', __dirname + '/views') // setting for views from views folder
+app.set('views', path.join(__dirname , 'views')) // setting for views from views folder
 app.set('layout','layouts/layout') // setting for layout from layout folder
 app.use(expressLayouts) 
 app.use(methodOverride('_method'))
