@@ -4,9 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "--start": "node server.js",
-    "start": "netlify-lambda serve functions",
-    "build": "netlify-lambda build functions",
+    "start": "node server.js",
+    "build": "netlify-lambda build server.js",
     "devStart": "nodemon server.js"
   },
   "repository": {
