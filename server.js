@@ -24,6 +24,7 @@ app.use(bodyParser.urlencoded({
   limit: '10mb',
   extended: false 
 }))
+app.use('/.netlify/functions/server', router); 
 
 const mongoose = require('mongoose')
 mongoose.connect(process.env.DATABASE_URL, { 
